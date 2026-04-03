@@ -34,7 +34,7 @@ const Flights = () => {
     const fetchSeatData = async (flightId) => {
       try {
         const response = await fetch(
-          `http://backend.exam.local/api/seats/${flightId}`
+          `http://localhost:8080/api/seats/${flightId}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -68,7 +68,7 @@ const Flights = () => {
   const handleReserveButtonClick = async () => {
     try {
       const response = await fetch(
-        "http://backend.exam.local/api/reservations/reserve",
+        "http://localhost:8080/api/reservations/reserve",
         {
           method: "POST",
           headers: {
