@@ -89,7 +89,7 @@ const BookingPage = () => {
       }).toString();
 
       const response = await fetch(
-        `http://localhost:8080/api/flights/search?${queryParams}`,
+        `http://api.travelo.local/api/flights/search?${queryParams}`,
         {
           method: "GET",
           headers: {
