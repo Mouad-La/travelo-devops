@@ -6,5 +6,5 @@ public class SeatService {
     public String reserveSeat(ReservationDto reservationDto) {
         return "Seat reserved successfully";
 }
-    
+
 }

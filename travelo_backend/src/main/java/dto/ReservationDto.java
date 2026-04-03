@@ -33,4 +33,3 @@ public class ReservationDto {
         this.passenger = passenger;
     }
 }
-

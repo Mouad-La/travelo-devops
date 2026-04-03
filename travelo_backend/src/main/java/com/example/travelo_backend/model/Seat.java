@@ -126,7 +126,7 @@ public class Seat {
     @Column(name = "d9")
     private String d9;
 
-    // Constructors, getters and setters 
+    // Constructors, getters and setters
     public int getId() {
         return id;
     }

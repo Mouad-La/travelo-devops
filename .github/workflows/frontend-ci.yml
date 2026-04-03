@@ -58,19 +58,79 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/travelo-frontend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/travelo-frontend:${{ github.sha }}
 
-  security-scan:
+  sast:
     runs-on: ubuntu-latest
     needs: build
-    # Rule : scanner seulement sur push vers main, pas sur pull_request
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Trivy vulnerability scanner
+      - name: Run SAST with Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/javascript
+            p/react
+            p/owasp-top-ten
+        continue-on-error: true
+
+  sca:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: travelo_frontend
+        run: npm ci
+
+      - name: Run npm audit (SCA)
+        working-directory: travelo_frontend
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Save npm audit report
+        working-directory: travelo_frontend
+        run: npm audit --json > npm-audit-report.json
+        continue-on-error: true
+
+      - name: Upload SCA report
+        uses: actions/upload-artifact@v4
+        with:
+          name: sca-report-frontend
+          path: travelo_frontend/npm-audit-report.json
+
+  container-security:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Run Trivy container scan
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/travelo-frontend:latest
           format: 'table'
           exit-code: '0'
           severity: 'CRITICAL,HIGH'
+
+      - name: Run Trivy scan and save report
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/travelo-frontend:latest
+          format: 'json'
+          output: 'trivy-report-frontend.json'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report-frontend
+          path: trivy-report-frontend.json

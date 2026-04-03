@@ -30,9 +30,9 @@ public class FlightController {
             @RequestParam String to,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date departureDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date returnDate // Optional
-            
+
     ) {
-        if (returnDate == null) { 
+        if (returnDate == null) {
             List<Flight> oneWayFlights = flightService.searchOneWayFlights(from, to, departureDate);
             return new ResponseEntity<>(oneWayFlights, HttpStatus.OK);
         } else {
@@ -41,9 +41,9 @@ public class FlightController {
             Map<String, List<Flight>> roundTripFlights = new HashMap<>();
             roundTripFlights.put("returnFlights", returnFlights);
             roundTripFlights.put("oneWayFlights", oneWayFlights);
-            
 
-            return new ResponseEntity<>(roundTripFlights, HttpStatus.OK); 
+
+            return new ResponseEntity<>(roundTripFlights, HttpStatus.OK);
         }
     }
 }

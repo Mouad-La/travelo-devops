@@ -1,0 +1,15 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        name: Remove trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: check-yaml
+        name: Check YAML files
+        args: ['--allow-multiple-documents']
+      - id: check-json
+        name: Check JSON files
+      - id: check-merge-conflict
+        name: Check for merge conflicts

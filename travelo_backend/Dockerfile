@@ -22,4 +22,3 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 # 7. Utiliser ENTRYPOINT (pas CMD seul)
 ENTRYPOINT [ "java", "-jar", "app.jar" ]
-

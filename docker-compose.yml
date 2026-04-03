@@ -49,4 +49,4 @@ volumes:
 
 networks:
   travelo-network:
-    driver: bridge   
+    driver: bridge
